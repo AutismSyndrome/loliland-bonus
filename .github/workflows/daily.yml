@@ -2,7 +2,7 @@ name: Daily Bonus Script
 
 on:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '0 6 * * *'  # каждый день в 6:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -18,10 +18,16 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install Firefox and dependencies
         run: |
           sudo apt update
-          sudo apt install -y firefox xvfb
+          sudo apt install -y firefox xvfb wget unzip
+          wget https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-v0.34.0-linux64.tar.gz
+          tar -xzf geckodriver-v0.34.0-linux64.tar.gz
+          sudo mv geckodriver /usr/local/bin/
+
+      - name: Install Python packages
+        run: |
           pip install selenium webdriver-manager requests
 
       - name: Run the script
